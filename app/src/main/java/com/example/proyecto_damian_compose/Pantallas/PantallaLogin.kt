@@ -27,6 +27,7 @@ import androidx.compose.material3.Button
 
 
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -54,10 +55,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-//TODO añadir boton de find
+
 //TODO añadir boton de recordar contraseña
 
-@Preview //TODO MODIFICAR UI
+@Preview
 @Composable
 fun PantallaLogin() {
 
@@ -88,9 +89,8 @@ fun PantallaLogin() {
 
     Box(modifier= Modifier.fillMaxSize()) {
 
-        //Registro
-        AnimatedVisibility(visible = mostrarRegistro, modifier = Modifier.fillMaxSize().padding(30.dp)) { PantallaRegistro()}
-
+    //Primero se carga la pantalla de Login y luego, como es un box, si le damos a registrarse carga por encima otra pantalla
+        //Lo hice asi por probar
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
             //Titulo
@@ -266,6 +266,17 @@ fun PantallaLogin() {
             }
         }
 
+        //Registro
+        // AnimatedVisibility(visible = mostrarRegistro, modifier = Modifier.fillMaxSize().padding(30.dp).background(
+          //  MaterialTheme.colorScheme.background.copy(alpha = 0.5f), shape = RoundedCornerShape(20.dp)
+        // )) { PantallaRegistro()}
+        AnimatedVisibility(visible = mostrarRegistro) {
+            Box(modifier = Modifier.fillMaxWidth().padding(15.dp).background(Color.Black.copy(alpha = 0.4f)), contentAlignment = Alignment.Center){
+                PantallaRegistro(cerrarRegistro = {mostrarRegistro = false}) //Si presiona el icono de Cerrar devuelve una funcion a la pantalla principal y en este caso hemos dicho que la funcion asigne mostrarRegistro=false
+
+
+            }
+        }
     }
 
 }
