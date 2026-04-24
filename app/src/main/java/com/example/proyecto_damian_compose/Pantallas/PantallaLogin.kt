@@ -1,5 +1,6 @@
 package com.example.proyecto_damian_compose.Pantallas
 
+import android.app.Activity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -50,6 +52,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.proyecto_damian_compose.Modelo.DatosDemo
 import com.example.proyecto_damian_compose.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,14 +68,18 @@ fun PantallaLogin() {
     //Variables para los TextField
     var email_texto by remember { mutableStateOf("") }
     var contraseña_texto by remember { mutableStateOf("") }
-
     var contraseña_visible by remember { mutableStateOf(false) }
+
+    var error_login by remember{mutableStateOf(false)}
 
     //Variables para el boton animado
     var presionado by remember {mutableStateOf(false)}
     var loading by remember{mutableStateOf(false)}
     var visible by remember{mutableStateOf(true)}
     val scope = rememberCoroutineScope() //Es un timer, tambien necesita ser guardado
+
+    //Para cerrar aplicacion
+    val contexto = LocalContext.current
 
 
     //Guardamos las propiedades del width aqui arriba y las aplicamos en el buton
@@ -134,7 +141,9 @@ fun PantallaLogin() {
                                 .background(
                                     color = Color.White.copy(alpha = 0.4f),
                                     shape = RoundedCornerShape(15.dp)
-                                )
+                                ).clickable{
+                                    (contexto as? Activity)?.finish()
+                                }
                         )
                     }
                     Spacer(modifier = Modifier
@@ -207,7 +216,10 @@ fun PantallaLogin() {
                             imageVector = Icons.Default.Email,
                             contentDescription = "icono_email"
                         )
-                    }, singleLine = true, shape = RoundedCornerShape(20.dp))
+                    }, singleLine = true, shape = RoundedCornerShape(20.dp),
+                    isError = error_login,
+                    supportingText = {if(error_login)Text("Datos Incorrectos")}
+                    )
 
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -227,17 +239,24 @@ fun PantallaLogin() {
 
                     },
                     visualTransformation = if(contraseña_visible) VisualTransformation.None else PasswordVisualTransformation(),// Si visible es cierto no hay visual transformation
-                    singleLine = true, shape = RoundedCornerShape(20.dp)
+                    singleLine = true, shape = RoundedCornerShape(20.dp),
+                    isError = error_login,
+                    supportingText = {if(error_login)Text("Datos Incorrectos")}
                 )
 
                 Spacer(Modifier.height(5.dp))
                 AnimatedVisibility(visible = visible, exit = fadeOut()) {
                     Button(onClick = {
-                        presionado = true
-                        loading = true
-                        //Primero se encoge boton y desaparece el texto y luego ->
-                        scope.launch { delay(300)
-                            visible = false} // <- Desaparece el boton completamente
+
+                       if(DatosDemo.comprobarLogin(email_texto, contraseña_texto)){
+                           presionado = true
+                           loading = true
+                           //Primero se encoge boton y desaparece el texto y luego ->
+                           scope.launch { delay(300)
+                               visible = false} // <- Desaparece el boton completamente
+                       } else {
+                           error_login = true //Si falla la comprobacion ponemos el error a true
+                       }
                     }, modifier = Modifier.width(animatedWidth) ) {
                         AnimatedVisibility(visible = !loading, exit = fadeOut()) {
                             Text("LOGIN")
@@ -257,9 +276,18 @@ fun PantallaLogin() {
 
                 Spacer(Modifier.height(10.dp))
                 Row(Modifier.padding(horizontal = 50.dp), horizontalArrangement = Arrangement.spacedBy(15.dp)){
-                    Image(painter = painterResource(id = R.drawable.google), contentDescription = "Login Google", modifier = Modifier.size(32.dp).clickable{})
-                    Image(painter = painterResource(id = R.drawable.facebook), contentDescription = "Login Google", modifier = Modifier.size(32.dp).clickable{})
-                    Image(painter = painterResource(id = R.drawable.apple), contentDescription = "Login Google", modifier = Modifier.size(32.dp).clickable{})
+                    Image(painter = painterResource(id = R.drawable.google), contentDescription = "Login Google", modifier = Modifier.size(32.dp).clickable{
+                        email_texto = "damian@gmail.com"
+                            contraseña_texto = "123456"
+                    })
+                    Image(painter = painterResource(id = R.drawable.facebook), contentDescription = "Login Google", modifier = Modifier.size(32.dp).clickable{
+                        email_texto = "miguel@gmail.com"
+                        contraseña_texto = "123456"
+                    })
+                    Image(painter = painterResource(id = R.drawable.apple), contentDescription = "Login Google", modifier = Modifier.size(32.dp).clickable{
+                        email_texto = "laura@gmail.com"
+                        contraseña_texto = "123456"
+                    })
                 }
 
 
@@ -272,7 +300,11 @@ fun PantallaLogin() {
         // )) { PantallaRegistro()}
         AnimatedVisibility(visible = mostrarRegistro) {
             Box(modifier = Modifier.fillMaxWidth().padding(15.dp).background(Color.Black.copy(alpha = 0.4f)), contentAlignment = Alignment.Center){
-                PantallaRegistro(cerrarRegistro = {mostrarRegistro = false}) //Si presiona el icono de Cerrar devuelve una funcion a la pantalla principal y en este caso hemos dicho que la funcion asigne mostrarRegistro=false
+                PantallaRegistro(cerrarRegistro = {mostrarRegistro = false},
+                    Registrar = {email, contraseña -> email_texto = email
+                    contraseña_texto = contraseña
+                    mostrarRegistro = false}
+                ) //Si presiona el icono de Cerrar devuelve una funcion a la pantalla principal y en este caso hemos dicho que la funcion asigne mostrarRegistro=false
 
 
             }
