@@ -28,10 +28,8 @@ import androidx.compose.material3.Button
 
 
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,7 +61,7 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable
-fun PantallaLogin() {
+fun PantallaLogin(loginCorrecto: (String) -> Unit ={}) {
 
     //Variables para los TextField
     var email_texto by remember { mutableStateOf("") }
@@ -254,6 +252,7 @@ fun PantallaLogin() {
                            //Primero se encoge boton y desaparece el texto y luego ->
                            scope.launch { delay(300)
                                visible = false} // <- Desaparece el boton completamente
+                           loginCorrecto(email_texto)
                        } else {
                            error_login = true //Si falla la comprobacion ponemos el error a true
                        }
@@ -301,7 +300,7 @@ fun PantallaLogin() {
         AnimatedVisibility(visible = mostrarRegistro) {
             Box(modifier = Modifier.fillMaxWidth().padding(15.dp).background(Color.Black.copy(alpha = 0.4f)), contentAlignment = Alignment.Center){
                 PantallaRegistro(cerrarRegistro = {mostrarRegistro = false},
-                    Registrar = {email, contraseña -> email_texto = email
+                    EnviarDatosLogin = { email, contraseña -> email_texto = email
                     contraseña_texto = contraseña
                     mostrarRegistro = false}
                 ) //Si presiona el icono de Cerrar devuelve una funcion a la pantalla principal y en este caso hemos dicho que la funcion asigne mostrarRegistro=false

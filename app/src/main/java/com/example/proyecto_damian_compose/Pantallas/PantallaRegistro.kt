@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -36,13 +35,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.proyecto_damian_compose.Modelo.DatosDemo
 import com.example.proyecto_damian_compose.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,8 +51,8 @@ import kotlinx.coroutines.launch
 
 @Preview
 @Composable //LE pasamos variables a nuestra funcion
-fun PantallaRegistro( cerrarRegistro: () -> Unit = {},
-                      Registrar: (String ,String) -> Unit = {_, _ -> }
+fun PantallaRegistro(cerrarRegistro: () -> Unit = {},
+                     EnviarDatosLogin: (String, String) -> Unit = { _, _ -> }
 ) { //Lo conectamos con el icono de cerrar
     var animarEmote by remember { mutableStateOf(true) } //Vamos a usar un componente llamado AsynImage (linea 62)
 
@@ -260,7 +259,8 @@ fun PantallaRegistro( cerrarRegistro: () -> Unit = {},
                 //Validamos
                 // validar()
                 if (validar()) {
-                    Registrar(email_texto, contraseña_texto) //Devolvemos los datos
+                    DatosDemo.registrar_Usuario(nombre, apellido, email_texto, contraseña_texto) //Registramos el nuevo usuario <-
+                    EnviarDatosLogin(email_texto, contraseña_texto) //Devolvemos los datos
                     boton_presionado = true;
                     loading = true;
                     scope.launch {

@@ -1,7 +1,8 @@
 package com.example.proyecto_damian_compose.Modelo
 
+import androidx.compose.runtime.toMutableStateList
 import com.example.proyecto_damian_compose.R
-
+import androidx.compose.runtime.mutableStateListOf
 
 object DatosDemo {
 
@@ -28,7 +29,7 @@ object DatosDemo {
     }
 
     //Imagenes obtenidas de SensaCine
-        val peliculas = mutableListOf(
+        val peliculas = mutableStateListOf(
             // Las que ya teníamos
             Pelicula("Inception", "Ciencia Ficción", "Christopher Nolan", 9.2, R.drawable.inception),
             Pelicula("Interstellar", "Ciencia Ficción", "Christopher Nolan", 9.9, R.drawable.interstellar),
@@ -58,16 +59,16 @@ object DatosDemo {
 
     //Lista aleatoria generada con IA de 3 a 10 peliculas de la lista superior
     val usuarios = mutableListOf(
-        Usuario("Damian", "García", "damian@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Ana", "López", "ana@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Carlos", "Martínez", "carlos@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Laura", "Sánchez", "laura@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Miguel", "Fernández", "miguel@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Sofía", "Ramírez", "sofia@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Pablo", "Torres", "pablo@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Elena", "Díaz", "elena@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Javier", "Moreno", "javier@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
-        Usuario("Lucía", "Jiménez", "lucia@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList())
+        Usuario("Damian", "García", "damian@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Ana", "López", "ana@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Carlos", "Martínez", "carlos@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Laura", "Sánchez", "laura@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Miguel", "Fernández", "miguel@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Sofía", "Ramírez", "sofia@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Pablo", "Torres", "pablo@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Elena", "Díaz", "elena@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Javier", "Moreno", "javier@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList()),
+        Usuario("Lucía", "Jiménez", "lucia@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableStateList())
     )
 
     }
