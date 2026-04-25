@@ -18,3 +18,6 @@ val moradoPrincipal = Color(0xff6a4fb3)
 val grisTransparencia = Color(0x55ffffff)
 val blanco = Color(0xFFFFFFFF)
 val negroTransparencia = Color(0x66000000)
+
+
+//Colores para ratings de peliculas

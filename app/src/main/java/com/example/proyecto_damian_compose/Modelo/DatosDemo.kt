@@ -31,8 +31,8 @@ object DatosDemo {
         val peliculas = mutableListOf(
             // Las que ya teníamos
             Pelicula("Inception", "Ciencia Ficción", "Christopher Nolan", 9.2, R.drawable.inception),
-            Pelicula("Interstellar", "Ciencia Ficción", "Christopher Nolan", 8.9, R.drawable.interstellar),
-            Pelicula("El Padrino", "Drama", "Francis Ford Coppola", 9.5, R.drawable.el_padrino),
+            Pelicula("Interstellar", "Ciencia Ficción", "Christopher Nolan", 9.9, R.drawable.interstellar),
+            Pelicula("El Padrino", "Drama", "Francis Ford Coppola", 9.0, R.drawable.el_padrino),
             Pelicula("Pulp Fiction", "Thriller", "Quentin Tarantino", 8.7, R.drawable.pulp_fiction),
             Pelicula("The Dark Knight", "Acción", "Christopher Nolan", 9.0, R.drawable.dark_knight),
 
@@ -51,23 +51,23 @@ object DatosDemo {
             Pelicula("El Club de la Lucha", "Thriller", "David Fincher", 8.8, R.drawable.fight_club),
             Pelicula("Joker", "Drama", "Todd Phillips", 8.4, R.drawable.joker),
             Pelicula("Avengers: Endgame", "Acción", "Anthony y Joe Russo", 8.4, R.drawable.endgame),
-            Pelicula("Dune", "Ciencia Ficción", "Denis Villeneuve", 8.0, R.drawable.dune),
+            Pelicula("Dune", "Ciencia Ficción", "Denis Villeneuve", 6.0, R.drawable.dune),
             Pelicula("1917", "Bélica", "Sam Mendes", 8.3, R.drawable.mil_novecientos_diecisiete),
             Pelicula("El Gran Gatsby", "Drama Romántico", "Baz Luhrmann", 7.2, R.drawable.gran_gatsby)
         )
 
-        val usuarios = mutableListOf(
-            Usuario("Damian", "García", "damian@gmail.com", "123456", peliculas),
-            Usuario("Ana", "López", "ana@gmail.com", "123456", peliculas),
-            Usuario("Carlos", "Martínez", "carlos@gmail.com", "123456", peliculas),
-            Usuario("Laura", "Sánchez", "laura@gmail.com", "123456", peliculas),
-            Usuario("Miguel", "Fernández", "miguel@gmail.com", "123456", peliculas),
-            Usuario("Sofía", "Ramírez", "sofia@gmail.com", "123456", peliculas),
-            Usuario("Pablo", "Torres", "pablo@gmail.com", "123456", peliculas),
-            Usuario("Elena", "Díaz", "elena@gmail.com", "123456", peliculas),
-            Usuario("Javier", "Moreno", "javier@gmail.com", "123456", peliculas),
-            Usuario("Lucía", "Jiménez", "lucia@gmail.com", "123456", peliculas)
-        )
-
+    //Lista aleatoria generada con IA de 3 a 10 peliculas de la lista superior
+    val usuarios = mutableListOf(
+        Usuario("Damian", "García", "damian@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Ana", "López", "ana@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Carlos", "Martínez", "carlos@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Laura", "Sánchez", "laura@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Miguel", "Fernández", "miguel@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Sofía", "Ramírez", "sofia@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Pablo", "Torres", "pablo@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Elena", "Díaz", "elena@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Javier", "Moreno", "javier@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList()),
+        Usuario("Lucía", "Jiménez", "lucia@gmail.com", "123456", peliculas.shuffled().take((3..10).random()).toMutableList())
+    )
 
     }

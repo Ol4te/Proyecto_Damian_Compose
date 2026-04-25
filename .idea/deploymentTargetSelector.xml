@@ -11,6 +11,9 @@
       <SelectionState runConfigName="PantallaRegistro">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="PruebaPantallaPrincipal">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
