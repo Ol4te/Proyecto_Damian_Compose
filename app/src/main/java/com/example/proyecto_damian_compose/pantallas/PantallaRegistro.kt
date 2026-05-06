@@ -1,4 +1,4 @@
-package com.example.proyecto_damian_compose.Pantallas
+package com.example.proyecto_damian_compose.pantallas
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -35,48 +35,55 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.proyecto_damian_compose.Modelo.DatosDemo
+import com.example.proyecto_damian_compose.modelo.DatosDemo
 import com.example.proyecto_damian_compose.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 // Aquí he jugado bastante porque quería añadir un icono gif al validar los datos el gif para -> Y volvemos a la pantalla inicial
+@PreviewScreenSizes
+@Composable
+fun PreviewPantallaRegistro() {
+    PantallaRegistro { string, string1 -> }
+}
 
-@Preview
 @Composable //LE pasamos variables a nuestra funcion
-fun PantallaRegistro(cerrarRegistro: () -> Unit = {},
-                     EnviarDatosLogin: (String, String) -> Unit = { _, _ -> }
+fun PantallaRegistro(
+    cerrarRegistro: () -> Unit = {},
+    enviarDatosLogin: (String, String) -> Unit = { _, _ -> }
 ) { //Lo conectamos con el icono de cerrar
     var animarEmote by remember { mutableStateOf(true) } //Vamos a usar un componente llamado AsynImage (linea 62)
 
     //Variables para los fields
     var nombre by remember { mutableStateOf("") }
     var apellido by remember { mutableStateOf("") }
-    var email_texto by remember { mutableStateOf("") }
-    var contraseña_texto by remember { mutableStateOf("") }
+    var emailTexto by remember { mutableStateOf("") }
+    var passwordTexto by remember { mutableStateOf("") }
 
-    var confirmar_contraseña_texto by remember { mutableStateOf("") }
+    var confirmarPasswordTexto by remember { mutableStateOf("") }
 
-    var contraseña_visible by remember { mutableStateOf(false) }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     //variables para animar el boton de registro
 
-    var boton_presionado by remember { mutableStateOf(false) }
+    var botonPresionado by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) } //Para añadir un pequeño delay <- Asi simulamos el loading real y damos tiempo a la animacion a completarse
 
-    var boton_visible by remember { mutableStateOf(true) }
+    var botonVisible by remember { mutableStateOf(true) }
 
     var scope = rememberCoroutineScope() // Es un timer de la aplicacion
 
     val animatedWidth by animateDpAsState(
-        targetValue = if (boton_presionado) 80.dp else 200.dp, //Boton se encoje
+        targetValue = if (botonPresionado) 80.dp else 200.dp, //Boton se encoje
         animationSpec = tween(durationMillis = 500)
 
     )
@@ -85,12 +92,17 @@ fun PantallaRegistro(cerrarRegistro: () -> Unit = {},
 
 
     //variables para errores
-    var error_Nombre by remember { mutableStateOf("") }
-    var error_Apellido by remember { mutableStateOf("") }
-    var error_Email by remember { mutableStateOf("") }
-    var error_Contraseña by remember { mutableStateOf("") }
-    var error_Confirmar by remember { mutableStateOf("") }
+    var errorNombre by remember { mutableStateOf("") }
+    var errorApellido by remember { mutableStateOf("") }
+    var errorEmail by remember { mutableStateOf("") }
+    var errorPassword by remember { mutableStateOf("") }
+    var errorConfirmar by remember { mutableStateOf("") }
 
+    val msgErrorNombre = stringResource(R.string.error_nombre_invalido)
+    val msgErrorApellido = stringResource(R.string.error_apellido_invalido)
+    val msgErrorEmail = stringResource(R.string.error_email_invalido)
+    val msgErrorPassword = stringResource(R.string.error_password_corta)
+    val msgErrorConfirmar = stringResource(R.string.error_passwords_no_coinciden)
 
     //Funcion para validaciones
     fun validar(): Boolean { //Validamos en el boton
@@ -98,34 +110,34 @@ fun PantallaRegistro(cerrarRegistro: () -> Unit = {},
         var esCorrecto = true
 
         //Se resetean los errores
-        error_Nombre = ""
-        error_Apellido = ""
-        error_Email = ""
-        error_Contraseña = ""
-        error_Confirmar = ""
+        errorNombre = ""
+        errorApellido = ""
+        errorEmail = ""
+        errorPassword = ""
+        errorConfirmar = ""
 
         if (nombre.isBlank()) {
             esCorrecto = false
-            error_Nombre = "Nombre no válido"
+            errorNombre = msgErrorNombre
         }
 
         if (apellido.isBlank()) {
             esCorrecto = false
-            error_Apellido = "Apellido no válido"
+            errorApellido = msgErrorApellido
         }
 
-        if (email_texto.isBlank() || !email_texto.contains("@") || email_texto.isEmpty()) {
-            error_Email = "Email inválido"
+        if (emailTexto.isBlank() || !emailTexto.contains("@") || emailTexto.isEmpty()) {
+            errorEmail = msgErrorEmail
             esCorrecto = false
         }
 
-        if (contraseña_texto.length < 6) {
-            error_Contraseña = "Longitud mínima 6 caractéres"
+        if (passwordTexto.length < 6) {
+            errorPassword = msgErrorPassword
             esCorrecto = false
         }
 
-        if (confirmar_contraseña_texto != contraseña_texto) {
-            error_Confirmar = "Las contraseñas no coinciden"
+        if (confirmarPasswordTexto != passwordTexto) {
+            errorConfirmar = msgErrorConfirmar
             esCorrecto = false
         }
         //Si todo funciona devuelve true
@@ -134,10 +146,13 @@ fun PantallaRegistro(cerrarRegistro: () -> Unit = {},
 
 
     Column(
-        modifier = Modifier.fillMaxSize().background(
-            MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
-            shape = RoundedCornerShape(20.dp)
-        ).padding(20.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                MaterialTheme.colorScheme.background.copy(alpha = 0.95f),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -146,96 +161,101 @@ fun PantallaRegistro(cerrarRegistro: () -> Unit = {},
         //Cerrar Registro
         Icon(
             imageVector = Icons.Default.Close,
-            contentDescription = "Cerrar Registro",
-            modifier = Modifier.size(48.dp).background(
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.1f),
-                shape = RoundedCornerShape(30.dp)
-            )
+            contentDescription = stringResource(R.string.cerrar_registro),
+            modifier = Modifier
+                .size(48.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(30.dp)
+                )
                 .clickable {
                     cerrarRegistro()
                 })
 
         Spacer(Modifier.height(40.dp))
 
-        Row(Modifier.width(275.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+
             OutlinedTextField(
                 value = nombre,
                 onValueChange = { nombre = it },
-                placeholder = { Text("Nombre") },
-                modifier = Modifier.weight(1f),
+                placeholder = { Text(stringResource(R.string.campo_nombre)) },
                 shape = RoundedCornerShape(20.dp),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Person,
-                        contentDescription = "icono nombre",
+                        contentDescription = stringResource(R.string.icono_nombre),
                         Modifier.size(24.dp)
                     )
                 },
-                isError = error_Nombre.isNotEmpty(),
-                supportingText = { if (error_Nombre.isNotEmpty()) Text(error_Nombre) }
+                isError = errorNombre.isNotEmpty(),
+                supportingText = { if (errorNombre.isNotEmpty()) Text(errorNombre) }
             ) //Si hay un error registrado por la tecla validar lo muestra,
 
 
             OutlinedTextField(
                 value = apellido,
                 onValueChange = { apellido = it },
-                placeholder = { Text("Apellido") },
-                modifier = Modifier.weight(1f),
+                placeholder = { Text(stringResource(R.string.campo_apellido)) },
                 shape = RoundedCornerShape(20.dp),
-                isError = error_Apellido.isNotEmpty(),
-                supportingText = { Text(error_Apellido) })
-        }
+                isError = errorApellido.isNotEmpty(),
+                supportingText = { Text(errorApellido) })
+
 
 
 
 
         OutlinedTextField(
-            value = email_texto,
-            onValueChange = { email_texto = it },
-            placeholder = { Text("Introduce tu email") },
+            value = emailTexto,
+            onValueChange = { emailTexto = it },
+            placeholder = { Text(stringResource(R.string.campo_email_registro)) },
             shape = RoundedCornerShape(20.dp),
             leadingIcon = {
-                Icon(imageVector = Icons.Default.Email, contentDescription = "correo")
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = stringResource(R.string.icono_email)
+                )
             },
             singleLine = true,
-            isError = error_Email.isNotEmpty(),
+            isError = errorEmail.isNotEmpty(),
             supportingText = {
-                Text(error_Email)
+                Text(errorEmail)
             })
 
 
 
         OutlinedTextField(
-            value = contraseña_texto,
-            onValueChange = { contraseña_texto = it },
-            placeholder = { Text("Contraseña") },
+            value = passwordTexto,
+            onValueChange = { passwordTexto = it },
+            placeholder = { Text(stringResource(R.string.campo_contrasena)) },
             shape = RoundedCornerShape(20.dp),
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.Lock,
-                    contentDescription = "key_icon",
-                    modifier = Modifier.clickable { contraseña_visible = !contraseña_visible })
+                    contentDescription = stringResource(R.string.icono_contrasena),
+                    modifier = Modifier.clickable { passwordVisible = !passwordVisible })
             },
-            visualTransformation = if (contraseña_visible) VisualTransformation.None else PasswordVisualTransformation(),
-            isError = error_Contraseña.isNotEmpty(),
-            supportingText = { Text(error_Contraseña) })
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            isError = errorPassword.isNotEmpty(),
+            supportingText = { Text(errorPassword) })
 
 
         OutlinedTextField(
-            value = confirmar_contraseña_texto,
-            onValueChange = { confirmar_contraseña_texto = it },
-            placeholder = { Text("Repite la contraseña") },
+            value = confirmarPasswordTexto,
+            onValueChange = { confirmarPasswordTexto = it },
+            placeholder = { Text(stringResource(R.string.campo_repetir_password)) },
             shape = RoundedCornerShape(20.dp),
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Lock,
-                    contentDescription = "key_icon",
-                    Modifier.size(24.dp).clickable { contraseña_visible = !contraseña_visible })
+                    contentDescription = stringResource(R.string.icono_contrasena),
+                    Modifier
+                        .size(24.dp)
+                        .clickable { passwordVisible = !passwordVisible })
             },
-            visualTransformation = if (contraseña_visible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             singleLine = true,
-            isError = error_Confirmar.isNotEmpty(),
-            supportingText = { Text(error_Confirmar) }
+            isError = errorConfirmar.isNotEmpty(),
+            supportingText = { Text(errorConfirmar) }
         )
 
         Spacer(Modifier.height(10.dp))
@@ -246,33 +266,44 @@ fun PantallaRegistro(cerrarRegistro: () -> Unit = {},
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(R.drawable.loading_gif)
                     .decoderFactory(coil.decode.GifDecoder.Factory()).build(),
-                contentDescription = "Loading Icon",
+                contentDescription = stringResource(R.string.loading_icon_desc),
                 modifier = Modifier.size(100.dp)
             )
         }
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(5.dp))
 
 
 
-        AnimatedVisibility(visible = boton_visible, exit = fadeOut()) {
+        AnimatedVisibility(visible = botonVisible, exit = fadeOut()) {
             Button(onClick = {
-                //Validamos
-                // validar()
+
+                //Hacemos trim y validamos
+
                 if (validar()) {
-                    DatosDemo.registrar_Usuario(nombre, apellido, email_texto, contraseña_texto) //Registramos el nuevo usuario <-
-                    EnviarDatosLogin(email_texto, contraseña_texto) //Devolvemos los datos
-                    boton_presionado = true;
+                    nombre = nombre.trim()
+                    apellido = apellido.trim()
+                    emailTexto = emailTexto.trim()
+                    passwordTexto = passwordTexto.trim()
+
+                    DatosDemo.registrar_Usuario(
+                        nombre,
+                        apellido,
+                        emailTexto,
+                        passwordTexto
+                    ) //Registramos el nuevo usuario <-
+                    enviarDatosLogin(emailTexto, passwordTexto) //Devolvemos los datos
+                    botonPresionado = true;
                     loading = true;
                     scope.launch {
                         delay(400)
-                        boton_visible = false
+                        botonVisible = false
                     }
                 }
 
 
             }, modifier = Modifier.width(animatedWidth)) {
                 AnimatedVisibility(visible = !loading, exit = fadeOut()) {
-                    Text("Confirmar")
+                    Text(stringResource(R.string.boton_confirmar))
                 }
             }
         }
