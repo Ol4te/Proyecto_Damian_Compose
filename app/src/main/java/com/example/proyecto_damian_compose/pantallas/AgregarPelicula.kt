@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,7 +22,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,6 +39,7 @@ import com.example.proyecto_damian_compose.modelo.DatosDemo
 import com.example.proyecto_damian_compose.modelo.Pelicula
 import com.example.proyecto_damian_compose.modelo.Usuario
 import com.example.proyecto_damian_compose.R
+import com.example.proyecto_damian_compose.componentes.CampoReutilizable
 
 
 @Composable
@@ -104,43 +105,11 @@ fun AgregarPelicula(usuario : Usuario, cerrarMenu: () -> Unit) {
                     Modifier.weight(2f).padding(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    OutlinedTextField(
-                        value = tituloPelicula,
-                        onValueChange = { tituloPelicula = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(20.dp),
-                        placeholder = {
-                            Text(
-                                stringResource(R.string.campo_titulo)
-                            )
-                        },
-                        isError = errorTitulo
-                    )
-                    OutlinedTextField(
-                        value = director,
-                        onValueChange = { director = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(20.dp),
-                        placeholder = { Text(stringResource(R.string.campo_director)) },
-                        isError = errorDirector
-                    )
-
-                        OutlinedTextField(
-                            value = genero,
-                            onValueChange = { genero = it },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(20.dp),
-                            placeholder = { Text(stringResource(R.string.campo_categoria)) },
-                            isError = errorGenero
-                        )
-                        OutlinedTextField(
-                            value = score,
-                            onValueChange = { score = it },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(10.dp),
-                            placeholder = { Text(stringResource(R.string.campo_score_placeholder)) },
-                            isError = errorScore
-                        )
+                    CampoReutilizable(valor = tituloPelicula, cambioValor = {tituloPelicula = it}, placeholder = stringResource(R.string.campo_titulo),
+                        error = errorTitulo)
+                    CampoReutilizable(valor = director, cambioValor = {director = it}, placeholder = stringResource(R.string.campo_director), error = errorDirector)
+                    CampoReutilizable(valor = genero, cambioValor = {genero = it}, placeholder = stringResource(R.string.campo_categoria), error= errorGenero)
+                    CampoReutilizable(valor = score, cambioValor = {score = it}, placeholder = stringResource(R.string.campo_score_placeholder), error= errorScore)
 
 
                 }
