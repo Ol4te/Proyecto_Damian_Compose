@@ -47,7 +47,9 @@ import com.example.proyecto_damian_compose.modelo.DatosDemo
 import com.example.proyecto_damian_compose.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
+import com.example.proyecto_damian_compose.api.UsuarioApi
+import com.example.proyecto_damian_compose.controller.RetrofitConfig
+import android.util.Log
 
 // Aquí he jugado bastante porque quería añadir un icono gif al validar los datos el gif para -> Y volvemos a la pantalla inicial
 @PreviewScreenSizes
@@ -285,18 +287,44 @@ fun PantallaRegistro(
                     emailTexto = emailTexto.trim()
                     passwordTexto = passwordTexto.trim()
 
-                    DatosDemo.registrar_Usuario(
-                        nombre,
-                        apellido,
-                        emailTexto,
-                        passwordTexto
-                    ) //Registramos el nuevo usuario <-
-                    enviarDatosLogin(emailTexto, passwordTexto) //Devolvemos los datos
-                    botonPresionado = true;
-                    loading = true;
+//                    DatosDemo.registrar_Usuario(
+//                        nombre,
+//                        apellido,
+//                        emailTexto,
+//                        passwordTexto
+//                    ) //Registramos el nuevo usuario <-
+//                    enviarDatosLogin(emailTexto, passwordTexto) //Devolvemos los datos
+//                    botonPresionado = true;
+//                    loading = true;
+
+//                    scope.launch {
+//                        delay(400)
+//                        botonVisible = false
+//                    }
+
                     scope.launch {
-                        delay(400)
-                        botonVisible = false
+
+                        try {
+
+                            val usuario = UsuarioApi(
+                                email = emailTexto,
+                                password = passwordTexto
+                            )
+
+                            RetrofitConfig.userApiService().crearCuenta(usuario)
+
+                            enviarDatosLogin(emailTexto, passwordTexto)
+
+                            botonPresionado = true
+                            loading = true
+
+                            delay(400)
+                            botonVisible = false
+
+                        } catch (e: Exception) {
+                            Log.e("REGISTRO", "Error", e)
+                            errorEmail = e.message ?: "Error"
+                        }
                     }
                 }
 

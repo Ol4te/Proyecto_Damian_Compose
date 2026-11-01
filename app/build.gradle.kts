@@ -68,4 +68,10 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.kotlinx.serialization.json)
 
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
+    // Usa la versión actual de Retrofit (2.11.0 es la más reciente al momento,
+// o usa la misma versión que tienes en 'implementation("com.squareup.retrofit2:retrofit:...")')
+    implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
 }

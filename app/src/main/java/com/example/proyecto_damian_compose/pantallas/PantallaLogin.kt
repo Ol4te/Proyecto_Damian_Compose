@@ -2,6 +2,7 @@ package com.example.proyecto_damian_compose.pantallas
 
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -54,6 +55,9 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proyecto_damian_compose.R
+import com.example.proyecto_damian_compose.api.Session
+import com.example.proyecto_damian_compose.api.UsuarioApi
+import com.example.proyecto_damian_compose.controller.RetrofitConfig
 import com.example.proyecto_damian_compose.modelo.DatosDemo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -240,13 +244,53 @@ fun PantallaLogin(loginCorrecto: (String) -> Unit = {}) {
                             Button(onClick = {
                                 emailField = emailField.trim()
                                 passwordField = passwordField.trim()
-                                if (DatosDemo.comprobarLogin(emailField, passwordField)) {
-                                    presionado = true
-                                    loading = true
-                                    scope.launch { delay(300); visible = false }
-                                    loginCorrecto(emailField)
-                                } else {
-                                    errorLogin = true
+//                                if (DatosDemo.comprobarLogin(emailField, passwordField)) {
+//                                    presionado = true
+//                                    loading = true
+//                                    scope.launch { delay(300); visible = false }
+//                                    loginCorrecto(emailField)
+//                                } else {
+//                                    errorLogin = true
+//                                }
+                                //TODO
+                                scope.launch {
+
+                                    try {
+
+                                        val usuario = UsuarioApi(
+                                            email = emailField,
+                                            password = passwordField
+                                        )
+
+                                        val respuesta =
+                                            RetrofitConfig.userApiService().login(usuario)
+
+                                        Log.d("LOGIN", respuesta.toString())
+
+                                        val token =
+                                            respuesta["token"]
+
+                                        if (token != null) {
+
+                                            Session.token = "Bearer $token"
+
+                                            val peliculas =
+                                                RetrofitConfig.peliculaApiService()
+                                                    .obtenerTodas(Session.token)
+                                            Log.d("PELICULAS", peliculas.toString())
+
+                                            loginCorrecto(emailField)
+
+
+
+                                        }
+
+                                    } catch (e: Exception) {
+                                        Log.e("PELICULAS", "ERROR", e)
+                                        errorLogin = true
+
+                                    }
+
                                 }
                             }, modifier = Modifier.width(animatedWidth)) {
                                 AnimatedVisibility(visible = !loading, exit = fadeOut()) {
